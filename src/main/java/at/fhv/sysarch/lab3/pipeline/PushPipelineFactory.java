@@ -53,8 +53,7 @@ public class PushPipelineFactory {
                 for(Face face: model.getFaces()) {
                     gc.strokeLine(face.getV1().getX() *100, face.getV1().getY() *100, face.getV2().getX() *100, face.getV2().getY() *100);
                     gc.strokeLine(face.getV2().getX(), face.getV2().getY(), face.getV3().getX(), face.getV3().getY());
-                    gc.strokeLine(face.getV3().getX(), face.getV3().getY(), face.getV1().getX(), face.getV1().getY());
-
+                    gc.strokeLine(face.getV3().getX(), face.getV3().getY(), face.getV1().getX(), face.getV1().getY()*100);
                 }
 
                 // TODO compute rotation in radians
