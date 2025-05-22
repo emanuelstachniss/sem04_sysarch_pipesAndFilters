@@ -1,8 +1,12 @@
 package at.fhv.sysarch.lab3.pipeline;
 
 import at.fhv.sysarch.lab3.animation.AnimationRenderer;
+import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.obj.Model;
 import javafx.animation.AnimationTimer;
+import javafx.scene.canvas.GraphicsContext;
+
+import java.awt.*;
 
 public class PushPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
@@ -19,7 +23,7 @@ public class PushPipelineFactory {
         // lighting can be switched on/off
         if (pd.isPerformLighting()) {
             // 4a. TODO perform lighting in VIEW SPACE
-            
+
             // 5. TODO perform projection transformation on VIEW SPACE coordinates
         } else {
             // 5. TODO perform projection transformation
@@ -32,15 +36,26 @@ public class PushPipelineFactory {
         // returning an animation renderer which handles clearing of the
         // viewport and computation of the praction
         return new AnimationRenderer(pd) {
+
+            GraphicsContext gc = pd.getGraphicsContext();
             // TODO rotation variable goes in here
 
             /** This method is called for every frame from the JavaFX Animation
-             * system (using an AnimationTimer, see AnimationRenderer). 
+             * system (using an AnimationTimer, see AnimationRenderer).
              * @param fraction the time which has passed since the last render call in a fraction of a second
-             * @param model    the model to render 
+             * @param model    the model to render
              */
             @Override
             protected void render(float fraction, Model model) {
+
+                gc.setStroke(pd.getModelColor());
+
+                for(Face face: model.getFaces()) {
+                    gc.strokeLine(face.getV1().getX() *100, face.getV1().getY() *100, face.getV2().getX() *100, face.getV2().getY() *100);
+                    gc.strokeLine(face.getV2().getX(), face.getV2().getY(), face.getV3().getX(), face.getV3().getY());
+                    gc.strokeLine(face.getV3().getX(), face.getV3().getY(), face.getV1().getX(), face.getV1().getY());
+
+                }
 
                 // TODO compute rotation in radians
 
@@ -55,4 +70,5 @@ public class PushPipelineFactory {
             }
         };
     }
+
 }

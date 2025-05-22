@@ -17,5 +17,5 @@ javafx {
 }
 
 application {
-    mainClassName = 'at.fhv.sysarch.lab3.Main'
+    mainClass = 'at.fhv.sysarch.lab3.Main'
 }

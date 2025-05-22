@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 public abstract class AnimationRenderer extends AnimationTimer {
     private long lastUpdate;
 
-    private PipelineData pd;
+    private final PipelineData pd;
 
     public AnimationRenderer(PipelineData pd) {
         this.pd = pd;
@@ -21,9 +21,9 @@ public abstract class AnimationRenderer extends AnimationTimer {
      * actual rendering as a side effect. 
      * 
      * @param fraction the time which has passed since the last render call in a fraction of a second
-     * @param model    the model to render 
+     * @param model    the model to render
      */
-    protected abstract void render(float fraction, Model m);
+    protected abstract void render(float fraction, Model model);
 
     // is called by the JavaFX animation system for every frame. This class
     // simply computes the fraction, clears the viewport and calls the 

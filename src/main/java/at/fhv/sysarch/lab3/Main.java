@@ -52,22 +52,22 @@ public class Main extends Application {
         stage.setTitle("Simple CG Pipeline");
         stage.show();
 
-        om.ifPresent(m -> {
-            PipelineData pd1 = new PipelineData.Builder(c1, m, VIEW_WIDTH, VIEW_HEIGHT)
+        om.ifPresent(model -> {
+            PipelineData pd1 = new PipelineData.Builder(c1, model, VIEW_WIDTH, VIEW_HEIGHT)
                                     .setModelColor(Color.ORANGE)
                                     .build();
 
-            PipelineData pd2 = new PipelineData.Builder(c2, m, VIEW_WIDTH, VIEW_HEIGHT)
+            PipelineData pd2 = new PipelineData.Builder(c2, model, VIEW_WIDTH, VIEW_HEIGHT)
                                     .setModelColor(Color.DARKGREEN)
                                     .setRenderingMode(RenderingMode.WIREFRAME)
                                     .build();
 
-            PipelineData pd3 = new PipelineData.Builder(c3, m, VIEW_WIDTH, VIEW_HEIGHT)
+            PipelineData pd3 = new PipelineData.Builder(c3, model, VIEW_WIDTH, VIEW_HEIGHT)
                                     .setModelColor(Color.RED)
                                     .setRenderingMode(RenderingMode.FILLED)
                                     .build();
 
-            PipelineData pd4 = new PipelineData.Builder(c4, m, VIEW_WIDTH, VIEW_HEIGHT)
+            PipelineData pd4 = new PipelineData.Builder(c4, model, VIEW_WIDTH, VIEW_HEIGHT)
                                     .setModelColor(Color.BLUE)
                                     .setRenderingMode(RenderingMode.FILLED)
                                     .setPerformLighting(true)
