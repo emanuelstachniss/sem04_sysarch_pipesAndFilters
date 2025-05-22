@@ -3,10 +3,13 @@ package at.fhv.sysarch.lab3.pipeline;
 import at.fhv.sysarch.lab3.animation.AnimationRenderer;
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.obj.Model;
+import at.fhv.sysarch.lab3.utils.MatrixUtils;
+import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Vec;
+import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.Vec4;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
-
-import java.awt.*;
 
 public class PushPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
@@ -34,10 +37,10 @@ public class PushPipelineFactory {
         // TODO 7. feed into the sink (renderer)
 
         // returning an animation renderer which handles clearing of the
-        // viewport and computation of the praction
+        // viewport and computation of the fraction
         return new AnimationRenderer(pd) {
-
             GraphicsContext gc = pd.getGraphicsContext();
+            private float rotationAngle = 0f;
             // TODO rotation variable goes in here
 
             /** This method is called for every frame from the JavaFX Animation
@@ -47,27 +50,40 @@ public class PushPipelineFactory {
              */
             @Override
             protected void render(float fraction, Model model) {
-
                 gc.setStroke(pd.getModelColor());
 
-                for(Face face: model.getFaces()) {
-                    gc.strokeLine(face.getV1().getX() *100, face.getV1().getY() *100, face.getV2().getX() *100, face.getV2().getY() *100);
-                    gc.strokeLine(face.getV2().getX(), face.getV2().getY(), face.getV3().getX(), face.getV3().getY());
-                    gc.strokeLine(face.getV3().getX(), face.getV3().getY(), face.getV1().getX(), face.getV1().getY()*100);
+                // Set up model transformation parameters
+                Vec3 modelPos = pd.getModelPos();
+                Vec3 modelScale = new Vec3(100, 100, 100);
+
+                Vec3 yAxis = new Vec3(1, 0, 0);
+
+                // Use a class field to accumulate rotation angle (in radians)
+                // For example, add: private float rotationAngle = 0; at the class level
+                rotationAngle += fraction * Math.PI; // Adjust speed as needed
+
+                Mat4 scaleMatrix = MatrixUtils.createScalingMatrix(modelScale);
+                Mat4 rotationMatrix = MatrixUtils.createRotationMatrix(yAxis, rotationAngle);
+                Mat4 translationMatrix = MatrixUtils.translationMatrix(modelPos);
+
+                Mat4 modelMatrix = translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
+
+                Mat4 viewMatrix = pd.getViewTransform();
+                Mat4 projectionMatrix = pd.getProjTransform();
+
+                Mat4 mvpMatrix = projectionMatrix.multiply(viewMatrix).multiply(modelMatrix);
+
+                for (Face face : model.getFaces()) {
+                    Vec4 v1 = mvpMatrix.multiply(face.getV1());
+                    Vec4 v2 = mvpMatrix.multiply(face.getV2());
+                    Vec4 v3 = mvpMatrix.multiply(face.getV3());
+
+                    gc.strokeLine(v1.getX(), v1.getY(), v2.getX(), v2.getY());
+                    gc.strokeLine(v2.getX(), v2.getY(), v3.getX(), v3.getY());
+                    gc.strokeLine(v3.getX(), v3.getY(), v1.getX(), v1.getY());
                 }
-
-                // TODO compute rotation in radians
-
-                // TODO create new model rotation matrix using pd.modelRotAxis
-
-                // TODO compute updated model-view tranformation
-
-                // TODO update model-view filter
-
-                // TODO trigger rendering of the pipeline
-
             }
+
         };
     }
-
 }
