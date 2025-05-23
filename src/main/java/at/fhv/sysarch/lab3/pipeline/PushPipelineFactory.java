@@ -105,9 +105,6 @@ public class PushPipelineFactory {
                         gc.fillOval(v3.getX() - 0.5, v3.getY() - 0.5, 1, 1);
                     }
                 }
-
-
-
                 // TODO compute rotation in radians
 
                 // TODO create new model rotation matrix using pd.modelRotAxis
