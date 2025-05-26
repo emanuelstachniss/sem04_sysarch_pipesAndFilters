@@ -1,5 +1,6 @@
 package at.fhv.sysarch.lab3.utils;
 
+import at.fhv.sysarch.lab3.obj.Face;
 import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
@@ -53,6 +54,33 @@ public class MatrixUtils {
                 new Vec4(t*x*y + s*z, t*y*y + c,   t*y*z - s*x, 0),
                 new Vec4(t*x*z - s*y, t*y*z + s*x, t*z*z + c,   0),
                 new Vec4(0,           0,           0,           1)
+        );
+    }
+
+    public static Face multiplyVectorWithMatrix(Mat4 matrix, Face f){
+        Vec4 v1 = matrix.multiply(f.getV1());
+        Vec4 v2 = matrix.multiply(f.getV2());
+        Vec4 v3 = matrix.multiply(f.getV3());
+
+        return new Face(v1,v2,v3,f);
+    }
+
+    public static Face divideVectorByWeight(Face f){
+        Vec4 v1 = divide(f.getV1());
+        Vec4 v2 = divide(f.getV2());
+        Vec4 v3 = divide(f.getV3());
+
+        return new Face(v1, v2, v3, f); // reuse face data like color or normal
+    }
+
+    private static Vec4 divide(Vec4 v) {
+        float w = v.getW();
+        if (w == 0f) return v;
+        return new Vec4(
+                v.getX() / w,
+                v.getY() / w,
+                v.getZ() / w,
+                1f
         );
     }
 }
