@@ -8,17 +8,12 @@ import com.hackoeur.jglm.Vec4;
 public class MatrixUtils {
 
     public static Mat4 translationMatrix(Vec3 trans) {
-        // Mat4 transHand = new Mat4(new Vec4(1, 0, 0, 0),
-        //                 new Vec4(0, 1, 0, 0),
-        //                 new Vec4(0, 0, 1 ,0),
-        //                 new Vec4(trans, 1)); // important: w of translation vector has to be 1!
-
         return Mat4.MAT4_IDENTITY.translate(trans);
     }
 
     public static Mat4 viewportMatrix(int width, int height) {
         // NOTE: JavaFX coordinate system starts top left corner,
-        // therefore need to invert y axis
+        // therefore need to invert y-axis
         float xmax = width;
         float xmin = 0;
         float ymax = 0;
@@ -30,15 +25,15 @@ public class MatrixUtils {
                         new Vec4((xmax + xmin) / 2f, (ymax + ymin) / 2f, 0.5f, 1f));
     }
 
-    // Creates a scaling matrix for a given scaling vector
-    public static Mat4 createScalingMatrix(Vec3 scale) {
-        return new Mat4(
-                new Vec4(scale.getX(), 0, 0, 0),
-                new Vec4(0, scale.getY(), 0, 0),
-                new Vec4(0, 0, scale.getZ(), 0),
-                new Vec4(0, 0, 0, 1)
-        );
-    }
+//    Creates a scaling matrix for a given scaling vector
+//    public static Mat4 createScalingMatrix(Vec3 scale) {
+//        return new Mat4(
+//                new Vec4(scale.getX(), 0, 0, 0),
+//                new Vec4(0, scale.getY(), 0, 0),
+//                new Vec4(0, 0, scale.getZ(), 0),
+//                new Vec4(0, 0, 0, 1)
+//        );
+//    }
 
     // Creates a rotation matrix for a given axis and angle (in radians)
     public static Mat4 createRotationMatrix(Vec3 axis, float angleRadians) {
@@ -62,7 +57,12 @@ public class MatrixUtils {
         Vec4 v2 = matrix.multiply(f.getV2());
         Vec4 v3 = matrix.multiply(f.getV3());
 
-        return new Face(v1,v2,v3,f);
+        // Also rotate the normals if present
+        Vec4 n1 = matrix.multiply(f.getN1());
+        Vec4 n2 = matrix.multiply(f.getN2());
+        Vec4 n3 = matrix.multiply(f.getN3());
+
+        return new Face(v1, v2, v3, n1, n2, n3);
     }
 
     public static Face divideVectorByWeight(Face f){

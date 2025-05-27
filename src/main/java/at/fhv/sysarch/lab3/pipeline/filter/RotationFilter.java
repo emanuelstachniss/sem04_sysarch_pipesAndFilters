@@ -6,11 +6,15 @@ import com.hackoeur.jglm.Mat4;
 
 public class RotationFilter implements PushFilter {
 
-    private final Mat4 rotationMatrix;
+    private Mat4 rotationMatrix;
     private PushFilter successor;
 
     public RotationFilter(Mat4 rotationMatrix) {
         this.rotationMatrix = rotationMatrix;
+    }
+
+    public void setRotationMatrix(Mat4 newRotationMatrix) {
+        this.rotationMatrix = newRotationMatrix;
     }
 
     @Override

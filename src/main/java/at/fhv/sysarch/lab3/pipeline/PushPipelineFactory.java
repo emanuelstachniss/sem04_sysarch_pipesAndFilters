@@ -17,6 +17,8 @@ public class PushPipelineFactory {
         PushFilter rotFilter = new RotationFilter(MatrixUtils.createRotationMatrix(pd.getModelRotAxis(), 0));
         PushFilter translationFilter = new TranslationFilter(pd.getModelTranslation());
         PushFilter viewTransformFilter = new ViewTransformFilter(pd.getViewTransform());
+        PushFilter backfaceCullingFilter = new BackfaceCullingFilter();
+        PushFilter depthSortingFilter = new DepthSortingFilter();
         PushFilter projectionFilter = new ProjectionFilter(pd.getProjTransform());
         PushFilter perspectiveFilter = new PerspectiveDivisionFilter();
         PushFilter viewPortTransformFilter = new ViewPortTransformFilter(pd.getViewportTransform());
@@ -45,7 +47,11 @@ public class PushPipelineFactory {
 
         translationFilter.setSuccessor(viewTransformFilter);
 
-        viewTransformFilter.setSuccessor(projectionFilter);
+        viewTransformFilter.setSuccessor(backfaceCullingFilter);
+
+        backfaceCullingFilter.setSuccessor(depthSortingFilter);
+
+        depthSortingFilter.setSuccessor(projectionFilter);
 
         projectionFilter.setSuccessor(perspectiveFilter);
 
@@ -61,9 +67,15 @@ public class PushPipelineFactory {
 
             @Override
             protected void render(float fraction, Model model) {
+
                 animationRotation += (float) (fraction * Math.toRadians(10));
+                Mat4 newRot = MatrixUtils.createRotationMatrix(pd.getModelRotAxis(), animationRotation);
+                ((RotationFilter) rotFilter).setRotationMatrix(newRot);
 
                 ((ModelSourceFilter)sourceModel).run(model);
+
+                // After all faces have been pushed, flush the sorting filter
+                ((DepthSortingFilter) depthSortingFilter).flush();
             }
         };
     }
