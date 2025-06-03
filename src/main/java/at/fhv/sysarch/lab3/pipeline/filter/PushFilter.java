@@ -2,9 +2,9 @@ package at.fhv.sysarch.lab3.pipeline.filter;
 
 import at.fhv.sysarch.lab3.obj.Face;
 
-public interface PushFilter {
+public interface PushFilter<I, O> {
 
-    public void setSuccessor(PushFilter successor);
+    void setSuccessor(PushFilter<O, ?> successor); //Output O == I on next filter
 
-    public void push(Face f);
+    void push(I f); //Input
 }

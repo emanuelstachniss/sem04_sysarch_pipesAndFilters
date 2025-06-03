@@ -2,12 +2,17 @@ package at.fhv.sysarch.lab3.pipeline.filter;
 
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.data.Pair;
-import at.fhv.sysarch.lab3.utils.MatrixUtils;
+import com.hackoeur.jglm.Vec3;
 import javafx.scene.paint.Color;
 
-public class PerspectiveDivisionFilter implements PushFilter<Pair<Face, Color>, Pair<Face, Color>> {
+public class PushLightingFilter implements PushFilter<Pair<Face, Color>, Pair<Face, Color>> {
 
+    private final Vec3 unitVector;
     private PushFilter<Pair<Face, Color>, ?> successor;
+
+    public PushLightingFilter(Vec3 unitVector) {
+        this.unitVector = unitVector;
+    }
 
     @Override
     public void setSuccessor(PushFilter<Pair<Face, Color>, ?> successor) {
@@ -16,6 +21,7 @@ public class PerspectiveDivisionFilter implements PushFilter<Pair<Face, Color>, 
 
     @Override
     public void push(Pair<Face, Color> pair) {
-        this.successor.push(new Pair<>(MatrixUtils.divideVectorByWeight(pair.fst()), pair.snd()));
+        Face f = pair.fst();
+        successor.push(new Pair<>(f, pair.snd().deriveColor(0, 1, f.getN1().toVec3().dot(unitVector), 1)));
     }
 }
