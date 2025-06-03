@@ -1,4 +1,4 @@
-package at.fhv.sysarch.lab3.pipeline.filter;
+package at.fhv.sysarch.lab3.pipeline.push;
 
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.data.Pair;
@@ -6,12 +6,12 @@ import at.fhv.sysarch.lab3.utils.MatrixUtils;
 import com.hackoeur.jglm.Mat4;
 import javafx.scene.paint.Color;
 
-public class ViewPortTransformFilter implements PushFilter<Pair<Face, Color>, Pair<Face, Color>> {
+public class PushViewPortTransformFilter implements PushFilter<Pair<Face, Color>, Pair<Face, Color>> {
 
     private final Mat4 viewPortMatrix;
     private PushFilter<Pair<Face, Color>, ?> successor;
 
-    public ViewPortTransformFilter(Mat4 viewPortMatrix) {
+    public PushViewPortTransformFilter(Mat4 viewPortMatrix) {
         this.viewPortMatrix = viewPortMatrix;
     }
 

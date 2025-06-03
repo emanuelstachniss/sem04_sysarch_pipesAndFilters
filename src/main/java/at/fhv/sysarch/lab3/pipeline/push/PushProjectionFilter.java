@@ -1,4 +1,4 @@
-package at.fhv.sysarch.lab3.pipeline.filter;
+package at.fhv.sysarch.lab3.pipeline.push;
 
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.data.Pair;
@@ -6,12 +6,12 @@ import at.fhv.sysarch.lab3.utils.MatrixUtils;
 import com.hackoeur.jglm.Mat4;
 import javafx.scene.paint.Color;
 
-public class ProjectionFilter implements PushFilter<Pair<Face, Color>, Pair<Face, Color>> {
+public class PushProjectionFilter implements PushFilter<Pair<Face, Color>, Pair<Face, Color>> {
 
     private final Mat4 projectionMatrix;
     private PushFilter<Pair<Face, Color>, ?> successor;
 
-    public ProjectionFilter(Mat4 projectionMatrix) {
+    public PushProjectionFilter(Mat4 projectionMatrix) {
         this.projectionMatrix = projectionMatrix;
     }
 

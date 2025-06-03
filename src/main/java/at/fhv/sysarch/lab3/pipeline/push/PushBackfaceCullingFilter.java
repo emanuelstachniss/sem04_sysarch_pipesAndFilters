@@ -1,9 +1,8 @@
-package at.fhv.sysarch.lab3.pipeline.filter;
+package at.fhv.sysarch.lab3.pipeline.push;
 
 import at.fhv.sysarch.lab3.obj.Face;
-import com.hackoeur.jglm.Vec3;
 
-public class BackfaceCullingFilter implements PushFilter<Face, Face> {
+public class PushBackfaceCullingFilter implements PushFilter<Face, Face> {
 
     private PushFilter<Face, ?> successor;
 

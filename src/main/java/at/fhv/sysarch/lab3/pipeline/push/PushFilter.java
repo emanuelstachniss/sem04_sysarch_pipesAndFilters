@@ -1,6 +1,4 @@
-package at.fhv.sysarch.lab3.pipeline.filter;
-
-import at.fhv.sysarch.lab3.obj.Face;
+package at.fhv.sysarch.lab3.pipeline.push;
 
 public interface PushFilter<I, O> {
 

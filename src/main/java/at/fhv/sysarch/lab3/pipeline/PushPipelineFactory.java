@@ -4,7 +4,7 @@ import at.fhv.sysarch.lab3.animation.AnimationRenderer;
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.obj.Model;
 import at.fhv.sysarch.lab3.pipeline.data.Pair;
-import at.fhv.sysarch.lab3.pipeline.filter.*;
+import at.fhv.sysarch.lab3.pipeline.push.*;
 import at.fhv.sysarch.lab3.utils.MatrixUtils;
 import com.hackoeur.jglm.Mat4;
 
@@ -15,24 +15,24 @@ import javafx.scene.paint.Color;
 public class PushPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
 
-        PushFilter<Model, Face> sourceModel = new ModelSourceFilter();
+        PushModelSourceFilter sourceModel = new PushModelSourceFilter();
 
-        PushFilter<Face, Face> scaleFilter = new ScaleFilter(new Mat4(1));
-        PushFilter<Face, Face> rotFilter = new RotationFilter(MatrixUtils.createRotationMatrix(pd.getModelRotAxis(), 0));
-        PushFilter<Face, Face> translationFilter = new TranslationFilter(pd.getModelTranslation());
+        PushFilter<Face, Face> scaleFilter = new PushScaleFilter(new Mat4(1));
+        PushRotationFilter rotFilter = new PushRotationFilter(MatrixUtils.createRotationMatrix(pd.getModelRotAxis(), 0));
+        PushFilter<Face, Face> translationFilter = new PushTranslationFilter(pd.getModelTranslation());
 
-        PushFilter<Face, Face> viewTransformFilter = new ViewTransformFilter(pd.getViewTransform());
+        PushFilter<Face, Face> viewTransformFilter = new PushViewTransformFilter(pd.getViewTransform());
 
-        PushFilter<Face, Face> backfaceCullingFilter = new BackfaceCullingFilter();
-        PushFilter<Face, Face> depthSortingFilter = new DepthSortingFilter();
+        PushFilter<Face, Face> backfaceCullingFilter = new PushBackfaceCullingFilter();
+        PushFilter<Face, Face> depthSortingFilter = new PushDepthSortingFilter();
 
         PushFilter<Face, Pair<Face, Color>> colorFilter = new PushColorFilter(pd.getModelColor());
         PushFilter<Pair<Face, Color>, Pair<Face, Color>> lightingFilter = new PushLightingFilter(pd.getLightPos().getUnitVector());
 
-        PushFilter<Pair<Face, Color>, Pair<Face, Color>> projectionFilter = new ProjectionFilter(pd.getProjTransform());
-        PushFilter<Pair<Face, Color>, Pair<Face, Color>> perspectiveFilter = new PerspectiveDivisionFilter();
-        PushFilter<Pair<Face, Color>, Pair<Face, Color>> viewPortTransformFilter = new ViewPortTransformFilter(pd.getViewportTransform());
-        PushFilter<Pair<Face, Color>, Pair<Face, Color>> renderer = new Renderer(pd.getGraphicsContext(), pd.getRenderingMode());
+        PushFilter<Pair<Face, Color>, Pair<Face, Color>> projectionFilter = new PushProjectionFilter(pd.getProjTransform());
+        PushFilter<Pair<Face, Color>, Pair<Face, Color>> perspectiveFilter = new PushPerspectiveDivisionFilter();
+        PushFilter<Pair<Face, Color>, Pair<Face, Color>> viewPortTransformFilter = new PushViewPortTransformFilter(pd.getViewportTransform());
+        PushFilter<Pair<Face, Color>, Pair<Face, Color>> renderer = new PushRenderer(pd.getGraphicsContext(), pd.getRenderingMode());
 
 
         sourceModel.setSuccessor(scaleFilter);
@@ -71,9 +71,10 @@ public class PushPipelineFactory {
 
                 animationRotation += (float) (fraction * Math.toRadians(10));
                 Mat4 newRot = MatrixUtils.createRotationMatrix(pd.getModelRotAxis(), animationRotation);
-                ((RotationFilter) rotFilter).setRotationMatrix(newRot);
 
-                ((ModelSourceFilter) sourceModel).run(model);
+                rotFilter.setRotationMatrix(newRot);
+
+                sourceModel.run(model);
 
             }
         };

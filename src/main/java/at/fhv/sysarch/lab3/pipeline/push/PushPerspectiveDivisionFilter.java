@@ -1,11 +1,11 @@
-package at.fhv.sysarch.lab3.pipeline.filter;
+package at.fhv.sysarch.lab3.pipeline.push;
 
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.data.Pair;
 import at.fhv.sysarch.lab3.utils.MatrixUtils;
 import javafx.scene.paint.Color;
 
-public class PerspectiveDivisionFilter implements PushFilter<Pair<Face, Color>, Pair<Face, Color>> {
+public class PushPerspectiveDivisionFilter implements PushFilter<Pair<Face, Color>, Pair<Face, Color>> {
 
     private PushFilter<Pair<Face, Color>, ?> successor;
 

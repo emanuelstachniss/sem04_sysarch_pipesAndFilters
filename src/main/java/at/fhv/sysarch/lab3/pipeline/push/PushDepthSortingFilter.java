@@ -1,11 +1,11 @@
-package at.fhv.sysarch.lab3.pipeline.filter;
+package at.fhv.sysarch.lab3.pipeline.push;
 
 import at.fhv.sysarch.lab3.obj.Face;
 
 import java.util.Comparator;
 import java.util.LinkedList;
 
-public class DepthSortingFilter implements PushFilter<Face, Face> {
+public class PushDepthSortingFilter implements PushFilter<Face, Face> {
 
     private final LinkedList<Face> faceBuffer = new LinkedList<>();
     private PushFilter<Face, ?> successor;

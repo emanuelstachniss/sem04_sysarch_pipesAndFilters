@@ -1,16 +1,16 @@
-package at.fhv.sysarch.lab3.pipeline.filter;
+package at.fhv.sysarch.lab3.pipeline.push;
 
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.utils.MatrixUtils;
 import com.hackoeur.jglm.Mat4;
 
-public class TranslationFilter implements PushFilter<Face, Face> {
+public class PushScaleFilter implements PushFilter<Face, Face> {
 
-    private final Mat4 translationMatrix;
+    private final Mat4 scaleMatrix;
     private PushFilter<Face, ?> successor;
 
-    public TranslationFilter(Mat4 translationMatrix) {
-        this.translationMatrix = translationMatrix;
+    public PushScaleFilter(Mat4 scaleMatrix) {
+        this.scaleMatrix = scaleMatrix;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class TranslationFilter implements PushFilter<Face, Face> {
     @Override
     public void push(Face f) {
         if (f != null) {
-            this.successor.push(MatrixUtils.multiplyVectorWithMatrix(translationMatrix, f));
+            this.successor.push(MatrixUtils.multiplyVectorWithMatrix(scaleMatrix, f));
         }
         else {
             this.successor.push(null);
