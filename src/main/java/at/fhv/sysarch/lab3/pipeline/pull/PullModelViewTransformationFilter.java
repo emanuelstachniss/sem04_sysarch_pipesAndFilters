@@ -15,11 +15,6 @@ public class PullModelViewTransformationFilter implements PullFilter<Face> {
     }
 
     @Override
-    public void setSource(PullFilter<Face> source) {
-        this.source = source;
-    }
-
-    @Override
     public Face pull() {
         return null;
     }

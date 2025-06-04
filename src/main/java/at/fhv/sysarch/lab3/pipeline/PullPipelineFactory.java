@@ -1,7 +1,6 @@
 package at.fhv.sysarch.lab3.pipeline;
 
 import at.fhv.sysarch.lab3.animation.AnimationRenderer;
-import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.obj.Model;
 import at.fhv.sysarch.lab3.pipeline.pull.*;
 import at.fhv.sysarch.lab3.utils.MatrixUtils;
@@ -10,7 +9,9 @@ import javafx.animation.AnimationTimer;
 
 public class PullPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
-        // TODO: pull from the source (model)
+
+        // pull from the source (model)
+        PullSourceModel source = new PullSourceModel();
 
         // TODO 1. perform model-view transformation from model to VIEW SPACE coordinates
         PullModelViewTransformationFilter modelViewTransformationFilter = new PullModelViewTransformationFilter(pd);
@@ -33,6 +34,7 @@ public class PullPipelineFactory {
         // TODO 6. perform perspective division to screen coordinates
 
         // TODO 7. feed into the sink (renderer)
+        PullRenderer renderer = new PullRenderer(pd.getGraphicsContext(), pd.getRenderingMode(), );
 
         // returning an animation renderer which handles clearing of the
         // viewport and computation of the praction
@@ -52,9 +54,11 @@ public class PullPipelineFactory {
                 // compute updated model-view tranformation
                 modelViewTransformationFilter.setRotationMatrix(newRot);
 
-                // TODO update model-view filter
+                // update model-view filter
+                source.updateModel(model);
 
-                // TODO trigger rendering of the pipeline
+                // trigger rendering of the pipeline
+                renderer.run();
             }
         };
     }
