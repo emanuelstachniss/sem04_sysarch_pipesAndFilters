@@ -19,8 +19,8 @@ public class PullProjectionTransformationFilter implements PullFilter<Pair<Face,
 
     @Override
     public Pair<Face, Color> pull() {
-        Face f = source.pull().fst();
-        return new Pair<>(multiplyVectorWithMatrix(transformMat, f), source.pull().snd());
+        Pair<Face, Color> pair = source.pull();
+        return new Pair<>(multiplyVectorWithMatrix(transformMat, pair.fst()), pair.snd());
     }
 
     @Override

@@ -2,7 +2,6 @@ package at.fhv.sysarch.lab3.pipeline.pull;
 
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.obj.Model;
-
 import java.util.ArrayDeque;
 import java.util.Queue;
 

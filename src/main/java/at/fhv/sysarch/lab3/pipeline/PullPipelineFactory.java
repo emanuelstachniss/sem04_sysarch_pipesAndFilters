@@ -17,7 +17,7 @@ public class PullPipelineFactory {
         PullSourceModel source = new PullSourceModel();
 
         // perform model-view transformation from model to VIEW SPACE coordinates
-        PullModelViewTransformationFilter modelViewTransformationFilter = new PullModelViewTransformationFilter(source);
+        PullModelViewTransformationFilter modelViewTransformationFilter = new PullModelViewTransformationFilter(source, pd.getModelTranslation(), pd.getViewTransform());
 
         // perform backface culling in VIEW SPACE
         PullFilter<Face> backfaceFilter = new PullBackfaceCullingFilter(modelViewTransformationFilter);
@@ -28,16 +28,19 @@ public class PullPipelineFactory {
         // add coloring (space unimportant)
         PullFilter<Pair<Face, Color>> colorFilter = new PullColorFilter(pd, depthSortingFilter);
 
+        PullFilter<Pair<Face, Color>> projectionTransformationFilter;
         // lighting can be switched on/off
-//        if (pd.isPerformLighting()) {
-//            // 4a. TODO perform lighting in VIEW SPACE
-//
-//            // 5. TODO perform projection transformation on VIEW SPACE coordinates
-//        } else {
-//            // 5. TODO perform projection transformation
-//        }
+        if (pd.isPerformLighting()) {
+            // 4a. perform lighting in VIEW SPACE
+            PullFilter<Pair<Face, Color>> lightingFilter = new PullLightingFilter(colorFilter, pd.getLightPos().getUnitVector());
 
-        PullFilter<Pair<Face, Color>> projectionTransformationFilter = new PullProjectionTransformationFilter(pd.getProjTransform(), colorFilter);
+            // 5. perform projection transformation on VIEW SPACE coordinates
+            projectionTransformationFilter = new PullProjectionTransformationFilter(pd.getProjTransform(), lightingFilter);
+
+        } else {
+            // 5. perform projection transformation
+            projectionTransformationFilter = new PullProjectionTransformationFilter(pd.getProjTransform(), colorFilter);
+        }
 
         // perform perspective division to screen coordinates
         PullFilter<Pair<Face, Color>> perspectiveDivisionFilter = new PullPerspectiveDivisionFilter(pd.getViewportTransform(), projectionTransformationFilter);

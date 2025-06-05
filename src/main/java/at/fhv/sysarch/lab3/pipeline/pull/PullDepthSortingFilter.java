@@ -1,7 +1,6 @@
 package at.fhv.sysarch.lab3.pipeline.pull;
 
 import at.fhv.sysarch.lab3.obj.Face;
-
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -29,7 +28,10 @@ public class PullDepthSortingFilter implements PullFilter<Face> {
 
     public void sortFaceBuffer() {
         while (source.hasNext()) {
-            faceBuffer.add(source.pull());
+            Face f = source.pull();
+            if (f != null) {
+                faceBuffer.add(f);
+            }
         }
         faceBuffer.sort(Comparator.comparing(f -> f.getV1().getZ() + f.getV2().getZ() + f.getV3().getZ()));
     }

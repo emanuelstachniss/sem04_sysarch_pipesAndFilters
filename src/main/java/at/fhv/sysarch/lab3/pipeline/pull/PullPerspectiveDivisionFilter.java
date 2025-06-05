@@ -21,9 +21,9 @@ public class PullPerspectiveDivisionFilter implements PullFilter<Pair<Face, Colo
 
     @Override
     public Pair<Face, Color> pull() {
-        Face f = source.pull().fst();
-        Face newFace = multiplyVectorWithMatrix(viewPortMatrix, f);
-        return new Pair<>(divideVectorByWeight(newFace), source.pull().snd());
+        Pair<Face, Color> pair = source.pull();
+        Face weightFace = divideVectorByWeight(pair.fst());
+        return new Pair<>(multiplyVectorWithMatrix(viewPortMatrix, weightFace), pair.snd());
     }
 
     @Override

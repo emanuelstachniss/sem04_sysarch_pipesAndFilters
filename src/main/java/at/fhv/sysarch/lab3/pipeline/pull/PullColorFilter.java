@@ -17,7 +17,8 @@ public class PullColorFilter implements PullFilter<Pair<Face, Color>> {
 
     @Override
     public Pair<Face, Color> pull() {
-        return new Pair<>(source.pull(), pd.getModelColor());
+        Face f = source.pull();
+        return new Pair<>(f, pd.getModelColor());
     }
 
     @Override

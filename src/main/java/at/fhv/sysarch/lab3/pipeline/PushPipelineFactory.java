@@ -20,7 +20,6 @@ public class PushPipelineFactory {
         PushFilter<Face, Face> scaleFilter = new PushScaleFilter(new Mat4(1));
         PushRotationFilter rotFilter = new PushRotationFilter(MatrixUtils.createRotationMatrix(pd.getModelRotAxis(), 0));
         PushFilter<Face, Face> translationFilter = new PushTranslationFilter(pd.getModelTranslation());
-
         PushFilter<Face, Face> viewTransformFilter = new PushViewTransformFilter(pd.getViewTransform());
 
         PushFilter<Face, Face> backfaceCullingFilter = new PushBackfaceCullingFilter();
