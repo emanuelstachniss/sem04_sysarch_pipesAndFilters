@@ -21,6 +21,7 @@ public class PullSourceModel implements PullFilter<Face> {
     }
 
     public void updateModel(Model model) {
-        model.getFaces().addAll(faces);
+        faces.clear();
+        faces.addAll(model.getFaces());
     }
 }

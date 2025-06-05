@@ -1,11 +1,14 @@
 package at.fhv.sysarch.lab3.pipeline;
 
 import at.fhv.sysarch.lab3.animation.AnimationRenderer;
+import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.obj.Model;
+import at.fhv.sysarch.lab3.pipeline.data.Pair;
 import at.fhv.sysarch.lab3.pipeline.pull.*;
 import at.fhv.sysarch.lab3.utils.MatrixUtils;
 import com.hackoeur.jglm.Mat4;
 import javafx.animation.AnimationTimer;
+import javafx.scene.paint.Color;
 
 public class PullPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
@@ -13,28 +16,34 @@ public class PullPipelineFactory {
         // pull from the source (model)
         PullSourceModel source = new PullSourceModel();
 
-        // TODO 1. perform model-view transformation from model to VIEW SPACE coordinates
-        PullModelViewTransformationFilter modelViewTransformationFilter = new PullModelViewTransformationFilter(pd);
+        // perform model-view transformation from model to VIEW SPACE coordinates
+        PullModelViewTransformationFilter modelViewTransformationFilter = new PullModelViewTransformationFilter(source);
 
-        // TODO 2. perform backface culling in VIEW SPACE
+        // perform backface culling in VIEW SPACE
+        PullFilter<Face> backfaceFilter = new PullBackfaceCullingFilter(modelViewTransformationFilter);
 
-        // TODO 3. perform depth sorting in VIEW SPACE
+        // perform depth sorting in VIEW SPACE
+        PullFilter<Face> depthSortingFilter = new PullDepthSortingFilter(backfaceFilter);
 
-        // TODO 4. add coloring (space unimportant)
+        // add coloring (space unimportant)
+        PullFilter<Pair<Face, Color>> colorFilter = new PullColorFilter(pd, depthSortingFilter);
 
         // lighting can be switched on/off
-        if (pd.isPerformLighting()) {
-            // 4a. TODO perform lighting in VIEW SPACE
-            
-            // 5. TODO perform projection transformation on VIEW SPACE coordinates
-        } else {
-            // 5. TODO perform projection transformation
-        }
+//        if (pd.isPerformLighting()) {
+//            // 4a. TODO perform lighting in VIEW SPACE
+//
+//            // 5. TODO perform projection transformation on VIEW SPACE coordinates
+//        } else {
+//            // 5. TODO perform projection transformation
+//        }
 
-        // TODO 6. perform perspective division to screen coordinates
+        PullFilter<Pair<Face, Color>> projectionTransformationFilter = new PullProjectionTransformationFilter(pd.getProjTransform(), colorFilter);
 
-        // TODO 7. feed into the sink (renderer)
-        PullRenderer renderer = new PullRenderer(pd.getGraphicsContext(), pd.getRenderingMode(), );
+        // perform perspective division to screen coordinates
+        PullFilter<Pair<Face, Color>> perspectiveDivisionFilter = new PullPerspectiveDivisionFilter(pd.getViewportTransform(), projectionTransformationFilter);
+
+        // feed into the sink (renderer)
+        PullRenderer renderer = new PullRenderer(pd.getGraphicsContext(), pd.getRenderingMode(), perspectiveDivisionFilter);
 
         // returning an animation renderer which handles clearing of the
         // viewport and computation of the praction

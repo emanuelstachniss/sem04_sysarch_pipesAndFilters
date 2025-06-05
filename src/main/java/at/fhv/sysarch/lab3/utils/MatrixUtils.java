@@ -25,16 +25,6 @@ public class MatrixUtils {
                         new Vec4((xmax + xmin) / 2f, (ymax + ymin) / 2f, 0.5f, 1f));
     }
 
-//    Creates a scaling matrix for a given scaling vector
-//    public static Mat4 createScalingMatrix(Vec3 scale) {
-//        return new Mat4(
-//                new Vec4(scale.getX(), 0, 0, 0),
-//                new Vec4(0, scale.getY(), 0, 0),
-//                new Vec4(0, 0, scale.getZ(), 0),
-//                new Vec4(0, 0, 0, 1)
-//        );
-//    }
-
     // Creates a rotation matrix for a given axis and angle (in radians)
     public static Mat4 createRotationMatrix(Vec3 axis, float angleRadians) {
         float x = axis.getX();
